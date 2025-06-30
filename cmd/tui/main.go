@@ -13,6 +13,26 @@ import (
 // fmt.Println(ni.NetInfos)
 func main() {
 
+	// ports, err := numbermanager.PortsFromPromInput(os.Args[1])
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// //sort.IntSlice(ports).Sort()
+	// sort.Ints(ports)
+
+	// for _, p := range ports {
+
+	// 	fmt.Println(p)
+	// }
+
+	// ips, err := numbermanager.IpsFromPromInput(os.Args[1])
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// for _, ip := range ips {
+	// 	fmt.Println(ip)
+	// }
+
 	var fp flagparser.FlagParser
 	err := fp.Parse()
 	if err != nil {
