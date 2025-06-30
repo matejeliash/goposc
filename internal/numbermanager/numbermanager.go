@@ -142,7 +142,7 @@ func ParseIpRange(startIP, endIP string) ([]string, error) {
 func IpsFromPromInput(input string) ([]string, error) {
 
 	// shirtcut to get all ports
-	// repomove spaces and split by `,` so multiple ranges and individual ports can be seleced
+	// remove spaces and split by `,` so multiple ranges and individual ports can be seleced
 	inputOrg := input
 	input = strings.ReplaceAll(input, " ", "")
 	splittedByComma := strings.Split(input, ",")

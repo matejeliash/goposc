@@ -23,8 +23,9 @@ func (fp *FlagParser) Parse() error {
 	pingFlag := flag.Bool("ping", false, "use ping to find if devices with specified id apdresses are active")
 	portsFlag := flag.String("ports", "", "specified ports")
 	portScanFlag := flag.Bool("port-scan", false, "use port scan to fin if service is active")
-	getBannerFlag := flag.Bool("get-banner", false, "use port scan to fin if service is active")
+	//getBannerFlag := flag.Bool("get-banner", false, "use port scan to fin if service is active")
 	netInfoFlag := flag.Bool("net-info", false, "get basic network information")
+	timeoutFlag := flag.Int("timeout", 500, "timeout for conneciotn in millisends")
 	flag.Parse()
 
 	if *ipsFlag != "" {
@@ -45,12 +46,14 @@ func (fp *FlagParser) Parse() error {
 	}
 
 	if *pingFlag {
-		p := pinger.NewPinger()
+		p := pinger.NewPinger(int64(*timeoutFlag))
 		fi := p.PingAllIPs(fp.IpRange)
 		fp.FoundIps = append(fp.FoundIps, fi...)
 	}
 
 	if *portScanFlag {
+
+		portScanner := portscanner.NewPortScanner(int64(*timeoutFlag))
 		if len(fp.IpRange) == 0 {
 			return fmt.Errorf("you must specify at least one ip adress")
 		}
@@ -62,12 +65,12 @@ func (fp *FlagParser) Parse() error {
 		if len(fp.FoundIps) > 0 {
 
 			for _, ip := range fp.FoundIps {
-				portscanner.ScanPortsOfIP(ip, fp.Ports)
+				portScanner.ScanPortsOfIP(ip, fp.Ports)
 			}
 
 		} else {
 			for _, ip := range fp.IpRange {
-				portscanner.ScanPortsOfIP(ip, fp.Ports)
+				portScanner.ScanPortsOfIP(ip, fp.Ports)
 
 			}
 
@@ -75,18 +78,18 @@ func (fp *FlagParser) Parse() error {
 
 	}
 
-	if *getBannerFlag {
-		if len(fp.IpRange) == 0 {
-			return fmt.Errorf("you must specify at least one ip adress")
-		}
+	// if *getBannerFlag {
+	// 	if len(fp.IpRange) == 0 {
+	// 		return fmt.Errorf("you must specify at least one ip adress")
+	// 	}
 
-		if len(fp.Ports) == 0 {
-			return fmt.Errorf("you must specify at least one port")
-		}
+	// 	if len(fp.Ports) == 0 {
+	// 		return fmt.Errorf("you must specify at least one port")
+	// 	}
 
-		portscanner.GetBanner(fp.IpRange[0], fp.Ports[0])
+	// 	portscanner.GetBanner(fp.IpRange[0], fp.Ports[0])
 
-	}
+	// }
 
 	if *netInfoFlag {
 		ni := &netinfo.NetworkInfo{}
